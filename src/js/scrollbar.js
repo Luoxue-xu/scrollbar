@@ -12,8 +12,12 @@ export default class Scrollbar {
         }
         this.ele = this.$(options.element);
         this.scrollY = options.scrollY || 0; // Y轴滚动的距离
-        this.speed = options.speed || 80; // 滚动内容速度
+        this.speed = (options.speed && options.speed < 100) ? options.speed : 80; // 滚动内容速度
         this.direction = 1; // 滚动方向， 0 向上 1 向下
+        this.showBar = options.showBar === undefined ? true : options.showBar; // 是否显示滚动条，默认显示
+
+        this.wheelType = 'onmousewheel' in document ? 'mousewheel' : 'DOMMouseScroll'; // 不同浏览器的滚动事件监听
+
         this.createBar();
     }
 
@@ -45,8 +49,8 @@ export default class Scrollbar {
         this.ele.appendChild(this.scrollerbar);
         setTimeout(() => {
             this.countStyle();
+            this.events();
         }, 100);
-        this.events();
     }
 
     // 获取样式
@@ -96,15 +100,37 @@ export default class Scrollbar {
 
     }
 
+    // 滚动到固定位置
+    scrollTo(n) {
+        if(this.scrollY < n) {
+            this.direction = 1;
+        }else {
+            this.direction = 0;
+        }
+        this.scrollY = n;
+        this.countStyle();
+    }
+
     // 控制室
     events() {
 
-        this.scroller.addEventListener('mousewheel', (event) => {
-            if(event.wheelDelta > 0) {
+        this.ele.addEventListener('mouseover', () => {
+            if(this.scrollStyle.scale < 1 && this.showBar) {
+                this.scrollerbar.style.opacity = 1;
+            }
+        }, false);
+
+        this.ele.addEventListener('mouseout', () => {
+            this.scrollerbar.style.opacity = 0;
+        }, false);
+
+        // 滚动内容区域
+        this.ele.addEventListener(this.wheelType, (event) => {
+            if(event.wheelDelta > 0 || event.detail < 0) {
                 // 向上滚动
                 this.direction = 0;
                 this.scrollY -= this.speed;
-            }else if(event.wheelDelta < 0) {
+            }else if(event.wheelDelta < 0 || event.detail > 0) {
                 // 向下滚动
                 this.direction = 1;
                 this.scrollY += this.speed;
