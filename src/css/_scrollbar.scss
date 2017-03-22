@@ -1,0 +1,27 @@
+.lx-scroller {
+    position: relative;
+}
+.lx-scroller-contain {
+    transition: all .3s ease-out;
+}
+.lx-scroller-bar {
+    position: absolute;
+    z-index: 99;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: .06rem;
+    background: rgba(0, 0, 0, .2);
+    border-radius: .04rem;
+}
+.lx-scroller-bars {
+    position: absolute;
+    top: 0;
+    right: .01rem;
+    left: .01rem;
+    height: .6rem;
+    background: rgba(255, 255, 255, .8);
+    border-radius: .04rem;
+    cursor: pointer;
+    transition: all .3s ease-out;
+}
