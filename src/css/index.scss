@@ -10,7 +10,7 @@ body {
     top: 50%;
     left: 50%;
     margin: -2rem 0 0 -3.25rem;
-    padding: .24rem;
+    padding: .24rem .24rem 0;
     width: 6.5rem;
     height: 4rem;
     background: #fff;
@@ -33,6 +33,7 @@ body {
 }
 .book-contain {
     margin-top: .24rem;
+    padding-bottom: .48rem;
     font-size: .14rem;
     color: #666;
     line-height: 1.8;
