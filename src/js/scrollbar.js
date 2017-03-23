@@ -12,7 +12,7 @@ export default class Scrollbar {
         }
         this.ele = this.$(options.element);
         this.scrollY = options.scrollY || 0; // Y轴滚动的距离
-        this.speed = (options.speed && options.speed < 100) ? options.speed : 80; // 滚动内容速度
+        this.speed = (options.speed && options.speed < 100) ? options.speed : 20; // 滚动内容速度
         this.direction = 1; // 滚动方向， 0 向上 1 向下
         this.showBar = options.showBar === undefined ? true : options.showBar; // 是否显示滚动条，默认显示
 
@@ -64,7 +64,7 @@ export default class Scrollbar {
     countStyle() {
 
         let _h = parseInt(this.css(this.ele, 'height')); // 容器高度
-        let _ch = parseInt(this.css(this.scroller, 'height')) + parseInt(this.css(this.scroller.firstChild, 'marginBottom')) + parseInt(this.css(this.ele, 'paddingBottom')); // 内容高度
+        let _ch = parseInt(this.css(this.scroller, 'height')) + parseInt(this.css(this.scroller.firstChild, 'marginBottom')) + parseInt(this.css(this.ele, 'paddingBottom')) + parseInt(this.css(this.ele, 'paddingTop')); // 内容高度
 
         // 内容样式
         this.scrollStyle = {
@@ -106,6 +106,29 @@ export default class Scrollbar {
 
     }
 
+    // 获取元素相对偏移
+    offset(el) {
+        let _offset = {
+            top: 0,
+            left: 0
+        };
+
+        let _scroll = {
+            left: document.body.scrollTop || document.documentElement.scrollLeft,
+            top: document.body.scrollTop || document.documentElement.scrollTop
+        };
+
+        while (el) {
+            _offset.left += el.offsetLeft;
+            _offset.top += el.offsetTop;
+            el = el.offsetParent;
+        }
+
+        _offset.top -= _scroll.top;
+
+        return _offset;
+    }
+
     // 滚动到固定位置
     scrollTo(n) {
         if(this.scrollY < n) {
@@ -120,12 +143,20 @@ export default class Scrollbar {
     // 控制室
     events() {
 
+        // 点击滚动条
+        this.scrollerbar.addEventListener('click', (e) => {
+            let _eTop = e.clientY - this.offset(this.scrollerbar).top;
+            this.scrollTo(_eTop * this.scrollStyle.scale);
+        }, false);
+
+        // 鼠标经过
         this.ele.addEventListener('mouseover', () => {
             if(this.scrollStyle.scale < 1 && this.showBar) {
                 this.scrollerbar.style.opacity = 1;
             }
         }, false);
 
+        // 鼠标移开
         this.ele.addEventListener('mouseout', () => {
             this.scrollerbar.style.opacity = 0;
         }, false);
@@ -143,8 +174,5 @@ export default class Scrollbar {
             }
             this.countStyle();
         }, false);
-
-
     }
-
 }
