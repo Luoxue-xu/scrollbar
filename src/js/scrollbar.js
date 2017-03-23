@@ -30,23 +30,25 @@ export default class Scrollbar {
 
     // 创建滚动条
     createBar() {
-        let eleChild = this.ele.innerHTML;
         this.ele.classList.add('lx-scroller');
 
         // 创建滚动容器
         this.scroller = document.createElement('div');
         this.scroller.className = 'lx-scroller-contain';
-        this.scroller.innerHTML = eleChild;
+        let _span = document.createElement('span');
+        this.scroller.appendChild(_span);
+        this.ele.insertBefore(this.scroller, this.ele.firstChild);
+
+        this.scroller.replaceChild(this.ele.lastElementChild, this.scroller.firstChild);
 
         // 创建滚动bar
         this.scrollerbar = document.createElement('div');
         this.scrollerbar.className = 'lx-scroller-bar';
         this.scrollerbar.innerHTML = '<span class="lx-scroller-bars"></span>';
         this.scrollerbars = this.scrollerbar.querySelector('.lx-scroller-bars');
-        this.ele.innerHTML = '';
 
-        this.ele.appendChild(this.scroller);
         this.ele.appendChild(this.scrollerbar);
+
         setTimeout(() => {
             this.countStyle();
             this.events();
@@ -60,11 +62,15 @@ export default class Scrollbar {
 
     // 计算样式
     countStyle() {
+
+        let _h = parseInt(this.css(this.ele, 'height')); // 容器高度
+        let _ch = parseInt(this.css(this.scroller, 'height')) + parseInt(this.css(this.scroller.firstChild, 'marginBottom')) + parseInt(this.css(this.ele, 'paddingBottom')); // 内容高度
+
         // 内容样式
         this.scrollStyle = {
-            height: parseInt(this.css(this.ele, 'height')), // 容器高度
-            cHeight: parseInt(this.css(this.scroller, 'height')), // 内容高度
-            scale: parseInt(this.css(this.ele, 'height')) / parseInt(this.css(this.scroller, 'height')) // 高度比例
+            height: _h,
+            cHeight: _ch,
+            scale: _h / _ch // 高度比例
         };
 
         // 滚动条样式
