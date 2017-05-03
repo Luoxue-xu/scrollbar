@@ -27,7 +27,7 @@ const config = {
     jsUrl: ['src/js/lib/*.js'],
     htmlUrl: ['src/*.html'],
     imgUrl: ['src/img/*.jpg'],
-    es6Url: ['src/js/*.js']
+    es6Url: ['src/js/*.js', 'src/js/**/*.js']
 };
 
 const build = {
@@ -83,7 +83,7 @@ const build = {
         }))
         .pipe(uglify())
         // .pipe(rename((path) => path.basename += '.min'))
-        .pipe(gulp.dest(d + '/js/')),
+        .pipe(gulp.dest(d + '/js')),
 
     // 清理文件
     clean: (s) => gulp.src(s)

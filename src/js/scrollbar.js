@@ -214,7 +214,6 @@ export default class Scrollbar {
 
                     this.scrollY -= moveDistance;
 
-                    console.log(this.scrollY);
                     this.scrollTo(this.scrollY);
                 }
             }, false);
